@@ -44,7 +44,7 @@ export function Countdown() {
   }, [activeCycle, minutes, seconds])
 
   useEffect(() => {
-    let interval: number
+    let interval: any
 
     function alertTimeFinished() {
       if (isSoundAllowed) playAlarmClockSound()
