@@ -11,6 +11,7 @@ import alarmClockSound from '../../../../assets/sound/alarm-clock.mp3'
 
 export function Countdown() {
   const {
+    isSoundAllowed,
     activeCycle,
     activeCycleId,
     markCycleAsFinished,
@@ -46,7 +47,7 @@ export function Countdown() {
     let interval: number
 
     function alertTimeFinished() {
-      playAlarmClockSound()
+      if (isSoundAllowed) playAlarmClockSound()
 
       const showNotification = Notifyer.notify({
         title: 'Time finished',
@@ -81,6 +82,7 @@ export function Countdown() {
       clearInterval(interval)
     }
   }, [
+    isSoundAllowed,
     totalSeconds,
     activeCycle,
     activeCycleId,

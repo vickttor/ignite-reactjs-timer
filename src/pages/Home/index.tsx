@@ -24,7 +24,7 @@ import mechKeyboardSound from '../../assets/sound/mech-keyboard.mp3'
 // uncontrolled => Conventional way the inputs persist value into it
 
 export function Home() {
-  const { activeCycle, createNewCycle, interruptCurrentCycle } =
+  const { isSoundAllowed, activeCycle, createNewCycle, interruptCurrentCycle } =
     useContext(CyclesContext)
   const [playPressedButtonSound] = useSound(mechKeyboardSound)
 
@@ -45,7 +45,6 @@ export function Home() {
 
   const handleCreateNewCycle = (data: newCycleType) => {
     createNewCycle(data)
-    reset()
   }
 
   useEffect(() => {
@@ -76,8 +75,9 @@ export function Home() {
           <StopCountdownButton
             type="button"
             onClick={() => {
-              playPressedButtonSound()
+              if (isSoundAllowed) playPressedButtonSound()
               interruptCurrentCycle()
+              reset()
             }}
           >
             <HandPalm size={24} />
@@ -85,7 +85,9 @@ export function Home() {
           </StopCountdownButton>
         ) : (
           <StartCountdownButton
-            onClick={() => playPressedButtonSound()}
+            onClick={() => {
+              if (isSoundAllowed) playPressedButtonSound()
+            }}
             type="submit"
             disabled={isSubmitButtonDisabled}
           >

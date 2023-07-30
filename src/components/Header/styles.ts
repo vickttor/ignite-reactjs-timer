@@ -57,5 +57,23 @@ export const HeaderContainer = styled.header`
         width: 100%;
       }
     }
+
+    button {
+      width: 3rem;
+      height: 3rem;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      justify-content: center;
+      color: ${(props) => props.theme['gray-100']};
+      background: ${(props) => props.theme['gray-600']};
+      border-radius: 4px;
+      border: 1px solid transparent;
+      cursor: pointer;
+
+      svg {
+        margin: 0 auto;
+      }
+    }
   }
 `

@@ -2,6 +2,7 @@ import { differenceInSeconds } from 'date-fns'
 import {
   ReactNode,
   createContext,
+  useCallback,
   useEffect,
   useReducer,
   useState,
@@ -19,6 +20,7 @@ interface CreateCycleData {
 }
 
 export interface CyclesContextType {
+  isSoundAllowed: boolean
   cycles: Cycle[]
   activeCycle: Cycle | undefined
   activeCycleId: string | null
@@ -28,6 +30,7 @@ export interface CyclesContextType {
   setSecondsPassed: (seconds: number) => void
   createNewCycle: (cycle: CreateCycleData) => void
   interruptCurrentCycle: () => void
+  handleTogglePageSound: () => void
 }
 
 export const CyclesContext = createContext({} as CyclesContextType)
@@ -39,6 +42,7 @@ interface CyclesContextProviderProps {
 export const CyclesContextProvider = ({
   children,
 }: CyclesContextProviderProps) => {
+  const [isSoundAllowed, setIsSoundAllowed] = useState(true)
   const [cyclesState, dispatch] = useReducer(
     cyclesReducer,
     {
@@ -57,6 +61,7 @@ export const CyclesContextProvider = ({
       return initialState
     },
   )
+
   const { cycles, activeCycleId } = cyclesState
   const activeCycle = cycles.find((cycle) => cycle.id === activeCycleId)
 
@@ -70,9 +75,13 @@ export const CyclesContextProvider = ({
 
   useEffect(() => {
     const stateJSON = JSON.stringify(cyclesState)
-
     localStorage.setItem('@ignite-timer:cycles-state-1.0.0', stateJSON)
   }, [cyclesState])
+
+  useEffect(() => {
+    const isAllowed = localStorage.getItem('@ignite-timer:sound-1.0.0')
+    if (isAllowed) setIsSoundAllowed(isAllowed.toLowerCase() === 'allowed')
+  }, [])
 
   const setSecondsPassed = (seconds: number) => {
     setAmountSecondsPassed(seconds)
@@ -81,6 +90,13 @@ export const CyclesContextProvider = ({
   const markCycleAsFinished = () => {
     dispatch(markCurrentCycleAsFinishedAction())
   }
+
+  const handleTogglePageSound = useCallback(() => {
+    const isAllowed = !isSoundAllowed ? 'allowed' : 'not-allowed'
+    localStorage.setItem('@ignite-timer:sound-1.0.0', isAllowed)
+
+    setIsSoundAllowed((prevState) => !prevState)
+  }, [isSoundAllowed])
 
   const createNewCycle = (data: CreateCycleData) => {
     const id = String(new Date().getTime())
@@ -112,6 +128,8 @@ export const CyclesContextProvider = ({
         setSecondsPassed,
         createNewCycle,
         interruptCurrentCycle,
+        isSoundAllowed,
+        handleTogglePageSound,
       }}
     >
       {children}
