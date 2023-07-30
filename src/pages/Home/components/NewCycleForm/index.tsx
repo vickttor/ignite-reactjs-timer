@@ -27,19 +27,21 @@ export function NewCycleForm() {
         <option value="Study UI/UX Design"></option>
       </datalist>
 
-      <label htmlFor="minutesAmount">for</label>
-      <MinutesAmountInput
-        id="minutesAmount"
-        type="number"
-        placeholder="00"
-        max={60}
-        disabled={!!activeCycle}
-        {...register('minutesAmount', {
-          valueAsNumber: true,
-        })}
-      />
+      <div className="minutesAmount">
+        <label htmlFor="minutesAmount">for</label>
+        <MinutesAmountInput
+          id="minutesAmount"
+          type="number"
+          placeholder="00"
+          max={60}
+          disabled={!!activeCycle}
+          {...register('minutesAmount', {
+            valueAsNumber: true,
+          })}
+        />
 
-      <span>minutes.</span>
+        <span>minutes.</span>
+      </div>
     </FormContainer>
   )
 }
